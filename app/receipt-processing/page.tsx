@@ -145,13 +145,18 @@ export default function ReceiptProcessingPage() {
     const handleConfirmAndShare = async () => {
         setIsSaving(true)
         try {
+            // first check session
             const {
-                data: { user },
-            } = await supabase.auth.getUser()
-            if (!user) {
+                data: { session },
+            } = await supabase.auth.getSession()
+
+            if (!session) {
                 alert('Please sign in to save items')
+                router.push('/login')
                 return
             }
+
+            const user = session.user
 
             // check if profile exists, if not create it
             const { data: profile } = await supabase
@@ -266,21 +271,39 @@ export default function ReceiptProcessingPage() {
         else if (itemName.includes('Eggs')) {
             daysToAdd = 30
         }
-        // rice
+        // rice and dry grains
         else if (itemName.includes('Rice')) {
-            daysToAdd = 365
+            daysToAdd = 90
         }
         // candy
         else if (itemName.includes('Sweetarts')) {
-            daysToAdd = 365
+            daysToAdd = 60
         }
         // oils
         else if (itemName.includes('Oil')) {
-            daysToAdd = 365
+            daysToAdd = 180
         }
-        // condiments and sauces
+        // sauces and condiments
+        else if (
+            itemName.includes('Sauce') ||
+            itemName.includes('Soy') ||
+            itemName.includes('Oyster') ||
+            itemName.includes('Hoisin') ||
+            itemName.includes('Sriracha')
+        ) {
+            daysToAdd = 90
+        }
+        // spices and seasonings
+        else if (
+            itemName.includes('Salt') ||
+            itemName.includes('Pepper') ||
+            itemName.includes('Sesame')
+        ) {
+            daysToAdd = 180
+        }
+        // default for other items
         else {
-            daysToAdd = 730 // 2 years
+            daysToAdd = 30
         }
 
         purchase.setDate(purchase.getDate() + daysToAdd)

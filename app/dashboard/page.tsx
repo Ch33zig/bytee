@@ -24,14 +24,14 @@ export default function DashboardPage() {
     const loadDashboardData = async () => {
         try {
             const {
-                data: { user },
-            } = await supabase.auth.getUser()
-            if (!user) return
+                data: { session },
+            } = await supabase.auth.getSession()
+            if (!session) return
 
             const [foodItems, shares, userStats] = await Promise.all([
-                getUserFoodItems(user.id),
-                getAvailableShares(user.id),
-                getUserStats(user.id),
+                getUserFoodItems(session.user.id),
+                getAvailableShares(session.user.id),
+                getUserStats(session.user.id),
             ])
 
             setItems(foodItems)

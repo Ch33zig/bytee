@@ -38,15 +38,17 @@ export default function CommunityPage() {
     const loadData = async () => {
         try {
             const {
-                data: { user },
-            } = await supabase.auth.getUser()
+                data: { session },
+            } = await supabase.auth.getSession()
 
-            setUserId(user?.id || null)
+            setUserId(session?.user?.id || null)
 
             const [available, userSharesData, claimedData] = await Promise.all([
-                getAvailableShares(user?.id),
-                user ? getUserShares(user.id) : Promise.resolve([]),
-                user ? getClaimedItems(user.id) : Promise.resolve([]),
+                getAvailableShares(session?.user?.id),
+                session ? getUserShares(session.user.id) : Promise.resolve([]),
+                session
+                    ? getClaimedItems(session.user.id)
+                    : Promise.resolve([]),
             ])
 
             console.log('Available shares:', available)

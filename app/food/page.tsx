@@ -9,7 +9,9 @@ import { getUserFoodItems, deleteFoodItem, createShare, type FoodItem as DBFoodI
 type FoodItem = {
     id: string
     name: string
-    quantity: number
+    quantity: number | null
+    weight: number | null
+    weight_unit: string | null
     category: string
     location: string
     expiry: string
@@ -40,6 +42,8 @@ export default function YourFoodPage() {
                 id: item.id,
                 name: item.name,
                 quantity: item.quantity,
+                weight: item.weight,
+                weight_unit: item.weight_unit,
                 category: item.category || '',
                 location: item.location || '',
                 expiry: item.expiry_date
@@ -174,7 +178,11 @@ export default function YourFoodPage() {
                                             className='mt-1 w-5 h-5 cursor-pointer'
                                         />
                                         <div className='flex-1 space-y-1'>
-                                            <h3 className='text-2xl font-bold text-[#443104]'>{item.name}</h3>
+                                            <h3 className='text-2xl font-bold text-[#443104]'>
+                                                {item.name}
+                                                {item.quantity && ` (${item.quantity}x)`}
+                                                {item.weight && ` (${item.weight} ${item.weight_unit})`}
+                                            </h3>
                                             <p className='text-[#443104]'>Expiry: {item.expiry}</p>
                                         </div>
                                     </div>

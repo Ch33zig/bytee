@@ -27,8 +27,25 @@ export default function ReceiptProcessingPage() {
         new Date().toISOString().split('T')[0]
     )
     const [isSaving, setIsSaving] = useState(false)
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
     useEffect(() => {
+        checkAuth()
+    }, [])
+
+    const checkAuth = async () => {
+        const {
+            data: { session },
+        } = await supabase.auth.getSession()
+        setIsAuthenticated(!!session)
+        if (!session) {
+            router.push('/login')
+        }
+    }
+
+    useEffect(() => {
+        if (isAuthenticated === false) return
+
         const uploadedImage = sessionStorage.getItem('uploadedReceipt')
         const uploadedFile = sessionStorage.getItem('uploadedReceiptFile')
 
@@ -47,7 +64,7 @@ export default function ReceiptProcessingPage() {
                 },
             ])
         }
-    }, [])
+    }, [isAuthenticated])
 
     const processReceiptWithGemini = async (base64Image: string) => {
         const interval = setInterval(() => {

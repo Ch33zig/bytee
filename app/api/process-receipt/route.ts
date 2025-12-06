@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
                     parts: [
                         {
                             text: `You are a receipt OCR system. Extract ALL food items from this receipt image. For each item, provide:
-- name: the food item name
+- name: the full, proper food item name (clean up abbreviations and write out the complete name)
 - quantity: if sold by count/units (e.g., 2 apples, 1 bottle), provide as integer
 - weight: if sold by weight (e.g., 1.29 lb, 0.5 kg), provide as decimal number
 - weight_unit: if weight is provided, specify unit (lb, kg, oz, g)
@@ -42,10 +42,13 @@ Return ONLY a JSON array of items. Example format:
 ]
 
 Rules:
+- Clean up abbreviations and expand them to full names (e.g., "Chkn Brst" → "Chicken Breast", "GR Sea Salt" → "Green Sea Salt Grinder", "Broc Crowns" → "Broccoli Crowns")
+- Write out the complete, readable food name that people would actually say
 - Use quantity for countable items (bottles, cans, packages)
 - Use weight for items sold by weight (meat, produce)
 - Extract ALL food items from the receipt
-- Do not include non-food items`,
+- Do not include non-food items
+- Make names clear and professional, not abbreviated receipt shorthand`,
                         },
                         {
                             inlineData: {

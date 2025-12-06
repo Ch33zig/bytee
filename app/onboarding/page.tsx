@@ -10,7 +10,7 @@ export default function OnboardingPage() {
         if (selected === 'share') {
             window.location.href = '/upload-receipt'
         } else if (selected === 'receive') {
-            window.location.href = '/'
+            window.location.href = '/dashboard'
         }
     }
 
